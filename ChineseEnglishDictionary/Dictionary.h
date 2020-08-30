@@ -9,7 +9,7 @@
 #include <ctype.h>
 #pragma comment(lib,"Winmm.lib")
 
-//储存单词的结构体，  用typedef定义别名为Word
+//储存单词的结构体，用typedef定义别名为Word
 typedef struct
 {
 	char English[15];

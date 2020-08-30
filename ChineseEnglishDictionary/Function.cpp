@@ -440,7 +440,7 @@ void drawEmptyWordsBook()
 {
 	putimage(0, 0, &EmptyWordsBook);
 }
-
+ 
 void reciteWords()
 {
 	loadimage(&ReciteChinese, _T("C:\\Users\\ztlzl\\Desktop\\CE-Dict\\reciteChinese.jpg"));
