@@ -2,8 +2,7 @@
 
 /*
 未完成：
-
-1.强化记忆--- 编写强化记忆函数
+1.强化记忆---编写强化记忆函数
 2.英语查询---英文全查询函数
 3.中文查询---尝试一下，可能不在我能力范围之类
 */
@@ -23,7 +22,7 @@ int main()
 	readWord();//调用函数从文件中读取单词存入结构体数组
 	writeWord();//调用函数把结构体数组的数据以二进制的形式存放到文件中
 	MOUSEMSG m;
-	loop:putimage(0, 0, &imgMenu);
+loop:putimage(0, 0, &imgMenu);
 	FlushBatchDraw();
 	while (1)
 	{
@@ -273,7 +272,7 @@ void drawBrowseWords()
 	wsprintf(chinese, "%s", word[browseIndex].Chinese);
 	wsprintf(english, "%s", word[browseIndex].English);
 
-	if(browseSearchNum == 0)
+	if (browseSearchNum == 0)
 		wsprintf(searchNum, "%s", " ");
 	else
 		wsprintf(searchNum, "%d", browseSearchNum);
@@ -312,7 +311,7 @@ void wordsBook()
 			worldsBookIndex = tmp;
 		}
 	}
-	
+
 	while (wordsInWordsBook != 0)//单词本不为空
 	{
 		if (MouseHit())
@@ -708,7 +707,7 @@ void reciteEnglish()
 					else
 					{
 						userWord[0] = '\0';
-						isSubmit == false;
+						isSubmit = false;
 						numOfLetterInReciteWords = 0;
 						userAnswer = -1;
 					}
@@ -722,7 +721,7 @@ void reciteEnglish()
 					else
 					{
 						userWord[0] = '\0';
-						isSubmit == false;
+						isSubmit = false;
 						numOfLetterInReciteWords = 0;
 						userAnswer = -1;
 					}
@@ -739,7 +738,7 @@ void reciteEnglish()
 					modeOfReciteWords = 1;
 				}
 				//如果点击到了回车
-				else if ((m.x > 861 && m.x < 937 && m.y > 289 && m.y < 427) || 
+				else if ((m.x > 861 && m.x < 937 && m.y > 289 && m.y < 427) ||
 					(m.x > 802 && m.x < 855 && m.y > 348 && m.y < 425))
 				{
 					isSubmit = true;
@@ -789,7 +788,7 @@ void reciteEnglish()
 			else if (ch == 8)
 				//删除键（退格）
 			{
-				if(numOfLetterInReciteWords == 0)
+				if (numOfLetterInReciteWords == 0)
 					userWord[0] = '\0';
 				else if (numOfLetterInReciteWords > 0)
 				{
@@ -822,7 +821,7 @@ void drawReciteEnglish()
 {
 	CHAR CHINESE[40];
 	CHAR tips[30];
-	
+
 	if (isSubmit == false)
 	{
 		wsprintf(tips, "%s", "请输入单词并按回车");
@@ -944,7 +943,7 @@ void testWordsChilese()
 		//当前的答案放在哪个选项里面，随机生成. 1 2 3 4表示A B C D
 		chineseExercise[i].trueAnswer = (rand() % 4) + 1;
 		chineseExercise[i].userAnswer = 0;
-		
+
 		//用do-while确保四个选项是不相等的
 		do
 		{
@@ -1166,7 +1165,7 @@ void drawTestWordsChilese()
 	{
 		wsprintf(tips, "%s", "您选择的答案是：D");
 	}
-	
+
 	settextstyle(20, 0, _T("宋体"));
 	settextcolor(GREEN);
 	outtextxy(332, 9, tips);
@@ -1352,7 +1351,7 @@ void testWordsEnglish()
 					testWordEnglish++;
 					if (testWordEnglish >= 9)
 						testWordEnglish = 9;
-				}	
+				}
 				//如果点击到了删除键
 				else if (m.x > 817 && m.x < 930 && m.y > 368 && m.y < 437)
 				{
@@ -1603,7 +1602,7 @@ void loadHistoryData()
 void saveThisData()
 {
 	FILE *fp;
-	if ((fp = fopen("C:\\Users\\ztlzl\\Desktop\\cet4Date.txt", "w")) == NULL) 
+	if ((fp = fopen("C:\\Users\\ztlzl\\Desktop\\cet4Date.txt", "w")) == NULL)
 		//写文本
 	{
 		printf("Can not open the file!");
@@ -1611,16 +1610,16 @@ void saveThisData()
 	}
 	char s[5];
 	/*
-	把如下的三个数据分别放在文件的每一行已达到保存进度的效果 
+	把如下的三个数据分别放在文件的每一行已达到保存进度的效果
 	browseIndex //单词浏览的结构体数组下标
 	modeOfReciteWords //背单词的模式，0为背中文，1为背英文，默认为0
 	reciteWordIndex //当前背诵的单词的下标，默认为0
 	*/
-	fputs(itoa(browseIndex, s, 10), fp);
+	fputs(_itoa(browseIndex, s, 10), fp);
 	fputs("\n", fp);
-	fputs(itoa(modeOfReciteWords, s, 10), fp);
+	fputs(_itoa(modeOfReciteWords, s, 10), fp);
 	fputs("\n", fp);
-	fputs(itoa(reciteWordIndex, s, 10), fp);
+	fputs(_itoa(reciteWordIndex, s, 10), fp);
 	fclose(fp);
 }
 
