@@ -149,3 +149,4 @@ void drawChineseToEnglish();//画中文搜索英文的界面
 int comp(const void*a, const void*b);//qsort的比较函数
 void fromEnglishSearchChinese(char *a);//由给定的英文搜索中文，返回下标，没有搜索到返回-1
 void endReciteStrengthenWord();//结束强化记忆的页面
+void click();//发出一次鼠标点击音效

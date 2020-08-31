@@ -4,8 +4,8 @@
 未完成：
 1.强化记忆---编写强化记忆函数----------√
 2.单词本单词，错误次数记忆---------√
-3.英语查询---英文全查询函数
-4.添加必要的音效
+3.英语查询---英文全查询函数--------√
+4.添加必要的音效---------√
 5.中文查询---尝试一下，可能不在我能力范围之类
 */
 
@@ -37,21 +37,25 @@ int main()
 				//如果点击到了载入文本文件
 				if (m.x > 393 && m.x < 600 && m.y > 27 && m.y < 113)
 				{
+					click();
 					loadWordTxt();
 				}
 				//如果点击到了载入历史数据
 				else if (m.x > 393 && m.x < 603 && m.y > 161 && m.y < 256)
 				{
+					click();
 					loadHistoryData();
 				}
 				//如果点击到了此次数据存档
 				else if (m.x > 392 && m.x < 604 && m.y > 304 && m.y < 384)
 				{
+					click();
 					saveThisData();
 				}
 				//如果点击到了单词浏览
 				else if (m.x > 389 && m.x < 608 && m.y > 427 && m.y < 514)
 				{
+					click();
 					BrowseWords();
 					if (isReturnBrowseWords == 1)
 					{
@@ -62,6 +66,7 @@ int main()
 				//如果点击到了单词背诵
 				else if (m.x > 670 && m.x < 875 && m.y > 26 && m.y < 107)
 				{
+					click();
 					choseReciteWords();
 					if (isReturnReciteWords == 1)
 					{
@@ -72,6 +77,7 @@ int main()
 				//如果点击到了单词测验
 				else if (m.x > 672 && m.x < 869 && m.y > 161 && m.y < 251)
 				{
+					click();
 					testWordsInit();
 					if (isReturnTestWords == 1)
 					{
@@ -82,6 +88,7 @@ int main()
 				//如果点击到了单词查询
 				else if (m.x > 669 && m.x < 876 && m.y > 304 && m.y < 385)
 				{
+					click();
 					searchInit();
 					if (isReturnSearchWords == 1)
 					{
@@ -92,6 +99,7 @@ int main()
 				//如果点击到了单词本
 				else if (m.x > 662 && m.x < 879 && m.y > 428 && m.y < 512)
 				{
+					click();
 					wordsBook();
 					if (isReturnWordsBook == 1)
 					{
@@ -102,6 +110,7 @@ int main()
 				//如果点击到了EXIT
 				else if (m.x > 897 && m.x < 995 && m.y > 8 && m.y < 46)
 				{
+					click();
 					MessageBox(GetHWnd(), "     期待您的下次使用", "CET4英汉词典", MB_OK);
 					exit(0);
 				}
@@ -191,6 +200,7 @@ void BrowseWords()
 				//如果点击到了往左翻页
 				if (m.x > 0 && m.x < 95 && m.y > 256 && m.y < 362)
 				{
+					click();
 					if (browseIndex == 0)
 						browseIndex = 0;
 					else
@@ -199,6 +209,7 @@ void BrowseWords()
 				//如果点击到了往右翻页
 				else if (m.x > 896 && m.x < 995 && m.y > 247 && m.y < 352)
 				{
+					click();
 					if (browseIndex == 3665 - 1)
 						browseIndex = 3665 - 1;
 					else
@@ -207,7 +218,7 @@ void BrowseWords()
 				//如果点击到了加入单词本
 				else if (m.x > 763 && m.x < 871 && m.y > 5 && m.y < 100)
 				{
-					//word[browseIndex].isInWordsBook = !word[browseIndex].isInWordsBook;
+					click();
 					if (word[browseIndex].isInWordsBook == true)
 					{
 						word[browseIndex].isInWordsBook = false;
@@ -222,17 +233,20 @@ void BrowseWords()
 				//如果点击到了返回
 				else if (m.x > 891 && m.x < 995 && m.y > 4 && m.y < 101)
 				{
+					click();
 					isReturnBrowseWords = 1;
 					break;
 				}
 				//如果点击到了查询按钮
 				else if (m.x > 235 && m.x < 276 && m.y > 22 && m.y < 66)
 				{
+					click();
 					browseIndex = browseSearchNum;
 				}
 				//如果点击到了删除按钮
 				else if (m.x > 303 && m.x < 351 && m.y > 23 && m.y < 62)
 				{
+					click();
 					browseSearchNum /= 10;
 				}
 			}
@@ -330,6 +344,7 @@ void wordsBook()
 				//如果点击到了往左翻页
 				if (m.x > 0 && m.x < 95 && m.y > 256 && m.y < 362)
 				{
+					click();
 					tmp = worldsBookIndex - 1;
 					//用tmp去试探单词本左边到底还有没有单词，没有的话保持位置不变
 					while (word[tmp].isInWordsBook == false && tmp >= 0)
@@ -344,6 +359,7 @@ void wordsBook()
 				//如果点击到了往右翻页
 				else if (m.x > 896 && m.x < 995 && m.y > 247 && m.y < 352)
 				{
+					click();
 					tmp = worldsBookIndex + 1;
 					//用tmp去试探单词本右边到底还有没有单词，没有的话保持位置不变
 					while (word[tmp].isInWordsBook == false && tmp < 3665)
@@ -358,6 +374,7 @@ void wordsBook()
 				//如果点击到了移出单词本
 				else if (m.x > 763 && m.x < 871 && m.y > 5 && m.y < 100)
 				{
+					click();
 					wordsInWordsBook--;
 					word[worldsBookIndex].isInWordsBook = false;
 					//将当前的单词移出单词本之后，显示下一个单词
@@ -393,6 +410,7 @@ void wordsBook()
 				//如果点击到了返回
 				else if (m.x > 891 && m.x < 995 && m.y > 4 && m.y < 101)
 				{
+					click();
 					isReturnWordsBook = 1;
 					break;
 				}
@@ -417,6 +435,7 @@ void wordsBook()
 					//如果鼠标点击到了返回
 					if (m.x > 891 && m.x < 995 && m.y > 4 && m.y < 101)
 					{
+						click();
 						isReturnWordsBook = 1;
 						break;
 					}
@@ -464,6 +483,7 @@ void choseReciteWords()
 				//如果点击到了返回
 				if (m.x > 850 && m.x < 994 && m.y > 5 && m.y < 145)
 				{
+					click();
 					//如果在背诵初始界面点击到了返回
 					isReturnReciteWords = 1;
 						break;
@@ -471,6 +491,7 @@ void choseReciteWords()
 				//如果点击到了顺序背诵
 				else if (m.x > 278 && m.x < 711 && m.y > 126 && m.y < 219)
 				{
+					click();
 					reciteWords();
 					//如果在顺序背单词中点击到了返回，则返回背诵初始界面
 					if (isReturnReciteWords == 1)
@@ -479,6 +500,7 @@ void choseReciteWords()
 				//如果点击到了强化背诵
 				else if (m.x > 279 && m.x < 709 && m.y > 254 && m.y < 343)
 				{
+					click();
 					reciteStrengthenWords();
 					//如果在强化背单词中点击到了返回，则返回背诵初始界面
 					if (isReturnReciteWords == 1)
@@ -548,6 +570,7 @@ void endReciteStrengthenWord()
 				//如果点击到了返回
 				if (m.x > 813 && m.x < 995 && m.y > 5 && m.y < 184)
 				{
+					click();
 					isReturnReciteWords = 1;
 					userAnswer = -1;
 					isNextOrLast = true;
@@ -576,17 +599,20 @@ void reciteStrengthenChinese()
 				//如果点击到了背中文
 				if (m.x > 5 && m.x < 178 && m.y > 5 && m.y < 130)
 				{
+					click();
 					modeOfReciteWords = 0;
 				}
 				//如果点击到了背英文
 				else if (m.x > 7 && m.x < 167 && m.y > 145 && m.y < 270)
 				{
+					click();
 					modeOfReciteWords = 1;
 					break;
 				}
 				//如果点击到了返回
 				else if (m.x > 877 && m.x < 994 && m.y > 1 && m.y < 112)
 				{
+					click();
 					isReturnReciteWords = 1;
 					userAnswer = -1;
 					isNextOrLast = true;
@@ -595,6 +621,7 @@ void reciteStrengthenChinese()
 				//如果点击到了last
 				else if (m.x > 12 && m.x < 129 && m.y > 532 && m.y < 588)
 				{
+					click();
 					reciteStrengthenWordIndex--;
 					if (reciteStrengthenWordIndex < 0)
 						reciteStrengthenWordIndex = 0;
@@ -607,6 +634,7 @@ void reciteStrengthenChinese()
 				//如果点击到了next
 				else if (m.x > 847 && m.x < 949 && m.y > 539 && m.y < 595)
 				{
+					click();
 					reciteStrengthenWordIndex++;
 					if (reciteStrengthenWordIndex >= maxIndex)
 						reciteStrengthenWordIndex = maxIndex - 1;
@@ -619,21 +647,25 @@ void reciteStrengthenChinese()
 				//如果点击到了选项A
 				else if (m.x > 322 && m.x < 400 && m.y > 185 && m.y < 256)
 				{
+					click();
 					userAnswer = 0;
 				}
 				//如果点击到了选项B
 				else if (m.x > 323 && m.x < 390 && m.y > 274 && m.y < 348)
 				{
+					click();
 					userAnswer = 1;
 				}
 				//如果点击到了选项C
 				else if (m.x > 326 && m.x < 399 && m.y > 375 && m.y < 436)
 				{
+					click();
 					userAnswer = 2;
 				}
 				//如果点击到了选项D
 				else if (m.x > 321 && m.x < 403 && m.y > 466 && m.y < 529)
 				{
+					click();
 					userAnswer = 3;
 				}
 			}
@@ -777,6 +809,7 @@ void reciteStrengthenEnglish()
 				//如果点击到了返回
 				if (m.x > 871 && m.x < 995 && m.y > 1 && m.y < 128)
 				{
+					click();
 					isReturnReciteWords = 1;
 					numOfLetterInReciteWords = 0;
 					userAnswer = -1;
@@ -785,6 +818,7 @@ void reciteStrengthenEnglish()
 				//如果点击到了LAST
 				else if (m.x > 18 && m.x < 150 && m.y > 533 && m.y < 590)
 				{
+					click();
 					reciteStrengthenWordIndex--;
 					if (reciteStrengthenWordIndex < 0)
 						reciteStrengthenWordIndex = 0;
@@ -799,6 +833,7 @@ void reciteStrengthenEnglish()
 				//如果点击到了NEXT
 				else if (m.x > 822 && m.x < 988 && m.y > 535 && m.y < 588)
 				{
+					click();
 					reciteStrengthenWordIndex++;
 					if (reciteStrengthenWordIndex >= maxIndex)
 						reciteStrengthenWordIndex = maxIndex - 1;
@@ -813,18 +848,21 @@ void reciteStrengthenEnglish()
 				//如果点击到了背中文
 				else if (m.x > 5 && m.x < 201 && m.y > 5 && m.y < 138)
 				{
+					click();
 					modeOfReciteWords = 0;
 					break;
 				}
 				//如果点击到了背英文
 				else if (m.x > 4 && m.x < 191 && m.y > 153 && m.y < 302)
 				{
+					click();
 					modeOfReciteWords = 1;
 				}
 				//如果点击到了回车
 				else if ((m.x > 861 && m.x < 937 && m.y > 289 && m.y < 427) ||
 					(m.x > 802 && m.x < 855 && m.y > 348 && m.y < 425))
 				{
+					click();
 					isSubmit = true;
 					userWord[numOfLetterInReciteWords] = '\0';
 					if ((strcmp(word[sortedWords[reciteStrengthenWordIndex].index].English, userWord)) == 0)
@@ -840,6 +878,7 @@ void reciteStrengthenEnglish()
 				//如果点击到了删除
 				else if (m.x > 815 && m.x < 922 && m.y > 439 && m.y < 501)
 				{
+					click();
 					if (numOfLetterInReciteWords == 0)
 						userWord[0] = '\0';
 					else if (numOfLetterInReciteWords > 0)
@@ -984,17 +1023,20 @@ void reciteChinese()
 				//如果点击到了背中文
 				if (m.x > 5 && m.x < 178 && m.y > 5 && m.y < 130)
 				{
+					click();
 					modeOfReciteWords = 0;
 				}
 				//如果点击到了背英文
 				else if (m.x > 7 && m.x < 167 && m.y > 145 && m.y < 270)
 				{
+					click();
 					modeOfReciteWords = 1;
 					break;
 				}
 				//如果点击到了返回
 				else if (m.x > 877 && m.x < 994 && m.y > 1 && m.y < 112)
 				{
+					click();
 					isReturnReciteWords = 1;
 					userAnswer = -1;
 					isNextOrLast = true;
@@ -1003,6 +1045,7 @@ void reciteChinese()
 				//如果点击到了last
 				else if (m.x > 12 && m.x < 129 && m.y > 532 && m.y < 588)
 				{
+					click();
 					reciteWordIndex--;
 					if (reciteWordIndex < 0)
 						reciteWordIndex = 0;
@@ -1015,6 +1058,7 @@ void reciteChinese()
 				//如果点击到了next
 				else if (m.x > 847 && m.x < 949 && m.y > 539 && m.y < 595)
 				{
+					click();
 					reciteWordIndex++;
 					if (reciteWordIndex >= 3665)
 						reciteWordIndex = 3664;
@@ -1027,6 +1071,7 @@ void reciteChinese()
 				//如果点击到了加入单词本
 				else if (m.x > 761 && m.x < 875 && m.y > 3 && m.y < 114)
 				{
+					click();
 					if (word[reciteWordIndex].isInWordsBook == false)
 					{
 						word[reciteWordIndex].isInWordsBook = true;
@@ -1036,21 +1081,25 @@ void reciteChinese()
 				//如果点击到了选项A
 				else if (m.x > 322 && m.x < 400 && m.y > 185 && m.y < 256)
 				{
+					click();
 					userAnswer = 0;
 				}
 				//如果点击到了选项B
 				else if (m.x > 323 && m.x < 390 && m.y > 274 && m.y < 348)
 				{
+					click();
 					userAnswer = 1;
 				}
 				//如果点击到了选项C
 				else if (m.x > 326 && m.x < 399 && m.y > 375 && m.y < 436)
 				{
+					click();
 					userAnswer = 2;
 				}
 				//如果点击到了选项D
 				else if (m.x > 321 && m.x < 403 && m.y > 466 && m.y < 529)
 				{
+					click();
 					userAnswer = 3;
 				}
 			}
@@ -1189,6 +1238,7 @@ void reciteEnglish()
 				//如果点击到了加入单词本
 				if (m.x > 726 && m.x < 866 && m.y > 2 && m.y < 131)
 				{
+					click();
 					if (word[reciteWordIndex].isInWordsBook == false)
 					{
 						word[reciteWordIndex].isInWordsBook = true;
@@ -1198,6 +1248,7 @@ void reciteEnglish()
 				//如果点击到了返回
 				else if (m.x > 871 && m.x < 995 && m.y > 1 && m.y < 128)
 				{
+					click();
 					isReturnReciteWords = 1;
 					numOfLetterInReciteWords = 0;
 					userAnswer = -1;
@@ -1206,6 +1257,7 @@ void reciteEnglish()
 				//如果点击到了LAST
 				else if (m.x > 18 && m.x < 150 && m.y > 533 && m.y < 590)
 				{
+					click();
 					reciteWordIndex--;
 					if (reciteWordIndex < 0)
 						reciteWordIndex = 0;
@@ -1220,6 +1272,7 @@ void reciteEnglish()
 				//如果点击到了NEXT
 				else if (m.x > 822 && m.x < 988 && m.y > 535 && m.y < 588)
 				{
+					click();
 					reciteWordIndex++;
 					if (reciteWordIndex >= 3665)
 						reciteWordIndex = 3664;
@@ -1234,18 +1287,21 @@ void reciteEnglish()
 				//如果点击到了背中文
 				else if (m.x > 5 && m.x < 201 && m.y > 5 && m.y < 138)
 				{
+					click();
 					modeOfReciteWords = 0;
 					break;
 				}
 				//如果点击到了背英文
 				else if (m.x > 4 && m.x < 191 && m.y > 153 && m.y < 302)
 				{
+					click();
 					modeOfReciteWords = 1;
 				}
 				//如果点击到了回车
 				else if ((m.x > 861 && m.x < 937 && m.y > 289 && m.y < 427) ||
 					(m.x > 802 && m.x < 855 && m.y > 348 && m.y < 425))
 				{
+					click();
 					isSubmit = true;
 					userWord[numOfLetterInReciteWords] = '\0';
 					if ((strcmp(word[reciteWordIndex].English, userWord)) == 0)
@@ -1260,6 +1316,7 @@ void reciteEnglish()
 				//如果点击到了删除
 				else if (m.x > 815 && m.x < 922 && m.y > 439 && m.y < 501)
 				{
+					click();
 					if (numOfLetterInReciteWords == 0)
 						userWord[0] = '\0';
 					else if (numOfLetterInReciteWords > 0)
@@ -1375,18 +1432,21 @@ void testWordsInit()
 				//如果点击到了中文测验
 				if (m.x > 280 && m.x < 583 && m.y > 118 && m.y < 205)
 				{
+					click();
 					beginTime = time(NULL);
 					testWordsChilese();
 				}
 				//如果点击到了英文测验
 				else if (m.x > 271 && m.x < 576 && m.y > 252 && m.y < 329)
 				{
+					click();
 					beginTime = time(NULL);
 					testWordsEnglish();
 				}
 				//如果点击到了返回
 				else if (m.x > 905 && m.x < 995 && m.y > 5 && m.y < 92)
 				{
+					click();
 					isReturnTestWords = 1;
 					break;
 				}
@@ -1501,6 +1561,7 @@ void testWordsChilese()
 				//如果点击到了选项A
 				if (m.x > 325 && m.x < 403 && m.y > 213 && m.y < 265)
 				{
+					click();
 					if (chineseExercise[testWordChinese].userAnswer == 0)
 						isTextedInTestChinese++;
 					chineseExercise[testWordChinese].userAnswer = 1;
@@ -1508,6 +1569,7 @@ void testWordsChilese()
 				//如果点击到了选项B
 				else if (m.x > 321 && m.x < 393 && m.y > 296 && m.y < 348)
 				{
+					click();
 					if (chineseExercise[testWordChinese].userAnswer == 0)
 						isTextedInTestChinese++;
 					chineseExercise[testWordChinese].userAnswer = 2;
@@ -1515,6 +1577,7 @@ void testWordsChilese()
 				//如果点击到了选项C
 				else if (m.x > 324 && m.x < 392 && m.y > 389 && m.y < 449)
 				{
+					click();
 					if (chineseExercise[testWordChinese].userAnswer == 0)
 						isTextedInTestChinese++;
 					chineseExercise[testWordChinese].userAnswer = 3;
@@ -1522,6 +1585,7 @@ void testWordsChilese()
 				//如果点击到了选项D
 				else if (m.x > 323 && m.x < 392 && m.y > 475 && m.y < 535)
 				{
+					click();
 					if (chineseExercise[testWordChinese].userAnswer == 0)
 						isTextedInTestChinese++;
 					chineseExercise[testWordChinese].userAnswer = 4;
@@ -1529,6 +1593,7 @@ void testWordsChilese()
 				//如果点击到了选项LAST
 				else if (m.x > 9 && m.x < 140 && m.y > 539 && m.y < 592)
 				{
+					click();
 					testWordChinese--;
 					if (testWordChinese < 0)
 						testWordChinese = 0;
@@ -1536,6 +1601,7 @@ void testWordsChilese()
 				//如果点击到了选项NEXT
 				else if (m.x > 855 && m.x < 990 && m.y > 546 && m.y < 592)
 				{
+					click();
 					testWordChinese++;
 					if (testWordChinese >= 9)
 						testWordChinese = 9;
@@ -1543,6 +1609,7 @@ void testWordsChilese()
 				//如果点击到了选项提交
 				else if (m.x > 680 && m.x < 863 && m.y > 1 && m.y < 50)
 				{
+					click();
 					trueNumInTestChinese = 0;
 					isSubmitInTestChinese = 1;
 					for (int i = 0; i < 10; i++)
@@ -1565,6 +1632,7 @@ void testWordsChilese()
 				//如果点击到了选项返回
 				else if (m.x > 873 && m.x < 993 && m.y > 5 && m.y < 123)
 				{
+					click();
 					break;
 				}
 			}
@@ -1846,6 +1914,7 @@ void testWordsEnglish()
 				//如果点击到了submit
 				if (m.x > 734 && m.x < 878 && m.y > 5 && m.y < 44)
 				{
+					click();
 					trueNumInTestEnglish = 0;
 					isSubmitInTestEnglish = 1;
 					for (int i = 0; i < 10; i++)
@@ -1867,11 +1936,13 @@ void testWordsEnglish()
 				//如果点击到了退出
 				else if (m.x > 888 && m.x < 996 && m.y > 4 && m.y < 110)
 				{
+					click();
 					break;
 				}
 				//如果点击到了LAST
 				else if (m.x > 9 && m.x < 133 && m.y > 543 && m.y < 591)
 				{
+					click();
 					testWordEnglish--;
 					if (testWordEnglish < 0)
 						testWordEnglish = 0;
@@ -1879,6 +1950,7 @@ void testWordsEnglish()
 				//如果点击到了NEXT
 				else if (m.x > 846 && m.x < 998 && m.y > 543 && m.y < 599)
 				{
+					click();
 					testWordEnglish++;
 					if (testWordEnglish >= 9)
 						testWordEnglish = 9;
@@ -1886,6 +1958,7 @@ void testWordsEnglish()
 				//如果点击到了删除键
 				else if (m.x > 817 && m.x < 930 && m.y > 368 && m.y < 437)
 				{
+					click();
 					englishExercise[testWordEnglish].nextLetterIndex--;
 					if (englishExercise[testWordEnglish].nextLetterIndex < 0)
 						englishExercise[testWordEnglish].nextLetterIndex = 0;
@@ -2257,6 +2330,7 @@ void searchInit()
 				//如果点击到了中文查询英文
 				if (m.x > 250 && m.x < 790 && m.y > 220 && m.y < 315)
 				{
+					click();
 					chineseToEnglish();
 					if (isReturnSearchWords == 1)
 					{
@@ -2266,6 +2340,7 @@ void searchInit()
 				//如果点击到了英文查询中文
 				else if (m.x > 240 && m.x < 778 && m.y > 350 && m.y < 447)
 				{
+					click();
 					englishToChinese();
 					if (isReturnSearchWords == 1)
 					{
@@ -2278,6 +2353,7 @@ void searchInit()
 				//如果点击到了返回
 				else if (m.x > 860 && m.x < 993 && m.y > 4 && m.y < 148)
 				{
+					click();
 					isReturnSearchWords = 1;
 					break;
 				}
@@ -2299,6 +2375,7 @@ void englishToChinese()
 			//如果鼠标点击
 			if (m.mkLButton == true)
 			{
+				click();
 				//如果点击到了返回
 				if (m.x > 851 && m.x < 992 && m.y > 6 && m.y < 146)
 				{
@@ -2397,9 +2474,41 @@ void chineseToEnglish()
 
 void fromEnglishSearchChinese(char *a)
 {
-	//查找
-	int i = 0;
-	for (i = 0; i < 3665; i++)
+	//二分法查找
+	int end = 3664;
+	int start = 0;
+	while (start <= end)
+	{
+		if (_stricmp(a, word[((end + start) / 2)].English) == 0)
+		{
+			wordIndexInSearchEnglishToChinese = (end + start) / 2;
+			break;
+		}
+		else if (_stricmp(a, word[((end + start) / 2)].English) > 0)
+		{
+			start = (end + start) / 2 + 1;
+		}
+		else
+		{
+			end = (end + start) / 2 - 1;
+		}
+	}
+
+	//如果没有查询到
+	if (start > end)
+		wordIndexInSearchEnglishToChinese = -1;
+}
+
+void click()
+{
+	mciSendString(_T("close click"), NULL, 0, NULL);
+	mciSendString(_T("open C:\\Users\\ztlzl\\Desktop\\CE-Dict\\click.wma alias click"), NULL, 0, NULL);
+	mciSendString(_T("play click"), NULL, 0, NULL);
+}
+
+/*
+int i = 0;
+for (i = 0; i < 3665; i++)
 	{
 		if (_stricmp(a, word[i].English) == 0)
 		{
@@ -2407,11 +2516,7 @@ void fromEnglishSearchChinese(char *a)
 			break;
 		}
 	}
-
-	//如果没有查询到
-	if (i == 3665)
-		wordIndexInSearchEnglishToChinese = -1;
-}
+*/
 
 /*
 250 220 中-英  英-中
