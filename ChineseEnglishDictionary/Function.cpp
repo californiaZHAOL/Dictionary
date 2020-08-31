@@ -2423,7 +2423,6 @@ void fromEnglishSearchChinese(char *a)
 247 447
 776 444
 
-
 860 4
 993 1
 864 148
