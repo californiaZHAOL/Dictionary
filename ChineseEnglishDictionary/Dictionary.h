@@ -62,7 +62,6 @@ int browseSearchNum = 0;//单词浏览界面下查询框显示的数字
 int worldsBookIndex = 0;//单词本的初始下标
 int wordsInWordsBook = 0;//在单词本里面的单词个数
 int modeOfReciteWords = 0;//背单词的模式，0为背中文，1为背英文，默认为0
-int reciteWordIndex = 0;//当前背诵的单词的下标，默认为0
 int insertReciteWordIndex = 0;//插入的背诵的单词错误次数结构体的下标，为了实现强化记忆功能
 bool isNextOrLast = true;//表示在背单词的模式下，是否对背单词的题目进行更换，默认为更换
 bool isSubmit = false;//背单词背中文模式下已经提交过答案
@@ -80,6 +79,9 @@ int trueNumInTestChinese = 0;//测验单词测验中文对了几个
 int trueNumInTestEnglish = 0;//测验单词测验英文对了几个
 int isSubmitInTestChinese = 0;//测验单词测验中文是否点击了提交，0为未点击，1为已点击
 int isSubmitInTestEnglish = 0;//测验单词测验英文是否点击了提交，0为未点击，1为已点击
+int reciteWordIndex = 0;//当前顺序背诵的单词的下标，默认为0
+int reciteStrengthenWordIndex = 0;//当前强化背诵的单词在排序数组当中的下标，默认为0
+int maxIndex;//判断强化记忆单词的在排序数组当中的最大值,最大值为maxIndex，且不包含maxIndex
 CHAR A[40];//背单词背中文模式下选项A的内容
 CHAR B[40];//背单词背中文模式下选项B的内容
 CHAR C[40];//背单词背中文模式下选项C的内容
@@ -91,8 +93,12 @@ IMAGE imgMenu;//init界面
 IMAGE browseWords;//browseWords界面
 IMAGE WordsBook;//单词本界面
 IMAGE EmptyWordsBook;//空的单词本界面
-IMAGE ReciteChinese;//背中文的界面
-IMAGE ReciteEnglish;//背英文的界面
+IMAGE ReciteChinese;//顺序背中文的界面
+IMAGE ReciteEnglish;//顺序背英文的界面
+IMAGE EndReciteStrengthenWord;//强化记忆没有强化记忆数据时的界面
+IMAGE ReciteStrengthenChinese;//强化背中文的界面
+IMAGE ReciteStrengthenEnglish;//强化背英文的界面
+IMAGE reciteInit;//背单词初始选择界面
 IMAGE testWords;//单词测验初始界面
 IMAGE testWordsChileseIMG;//单词测验测验中文界面
 IMAGE testWordsEnglishIMG;//单词测验测验英文界面
@@ -110,9 +116,15 @@ void drawWordsBook();//画单词本界面
 void drawEmptyWordsBook();//画空的单词本
 void reciteEnglish();//背英文
 void reciteChinese();//背中文
-void reciteWords();//背单词的函数
-void drawReciteChinese();//画背单词中背中文的界面
-void drawReciteEnglish();//画背单词中背英文的界面
+void choseReciteWords();//背单词选择模式的函数
+void reciteStrengthenWords();//强化背单词的函数
+void reciteWords();//顺序背单词的函数
+void drawReciteChinese();//画顺序背单词中背中文的界面
+void drawReciteEnglish();//画顺序背单词中背英文的界面
+void drawReciteStrengthenChinese();//画强化背单词中背中文的界面
+void drawReciteStrengthenEnglish();//画强化背单词中背英文的界面
+void reciteStrengthenChinese();//强化背单词背中文界面
+void reciteStrengthenEnglish();//强化背单词背英文界面
 void testWordsInit();//单词测验界面的初始化
 void testWordsEnglish();//单词测验中测验英语
 void testWordsChilese();//单词测验中测验中文
@@ -122,3 +134,4 @@ bool tenNumIsNotEqual(int *a);//判断一个有十个数的数组里面的数互
 bool fourNumIsNotEqual(int *a);//判断一个有四个数的数组里面的数互不相等
 void sortMistakeNumOfWords();//给保存错误次数的结构体数组排序
 int comp(const void*a, const void*b);//qsort的比较函数
+void endReciteStrengthenWord();//结束强化记忆的页面

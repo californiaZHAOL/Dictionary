@@ -2,9 +2,11 @@
 
 /*
 Î´Íê³É£º
-1.Ç¿»¯¼ÇÒä---±àÐ´Ç¿»¯¼ÇÒäº¯Êý
-2.Ó¢Óï²éÑ¯---Ó¢ÎÄÈ«²éÑ¯º¯Êý
-3.ÖÐÎÄ²éÑ¯---³¢ÊÔÒ»ÏÂ£¬¿ÉÄÜ²»ÔÚÎÒÄÜÁ¦·¶Î§Ö®Àà
+1.Ç¿»¯¼ÇÒä---±àÐ´Ç¿»¯¼ÇÒäº¯Êý----------¡Ì
+2.µ¥´Ê±¾µ¥´Ê£¬´íÎó´ÎÊý¼ÇÒä
+3.Ó¢Óï²éÑ¯---Ó¢ÎÄÈ«²éÑ¯º¯Êý
+4.Ìí¼Ó±ØÒªµÄÒôÐ§
+5.ÖÐÎÄ²éÑ¯---³¢ÊÔÒ»ÏÂ£¬¿ÉÄÜ²»ÔÚÎÒÄÜÁ¦·¶Î§Ö®Àà
 */
 
 int main()
@@ -22,7 +24,7 @@ int main()
 	readWord();//µ÷ÓÃº¯Êý´ÓÎÄ¼þÖÐ¶ÁÈ¡µ¥´Ê´æÈë½á¹¹ÌåÊý×é
 	writeWord();//µ÷ÓÃº¯Êý°Ñ½á¹¹ÌåÊý×éµÄÊý¾ÝÒÔ¶þ½øÖÆµÄÐÎÊ½´æ·Åµ½ÎÄ¼þÖÐ
 	MOUSEMSG m;
-loop:putimage(0, 0, &imgMenu);
+	loop:putimage(0, 0, &imgMenu);
 	FlushBatchDraw();
 	while (1)
 	{
@@ -60,7 +62,7 @@ loop:putimage(0, 0, &imgMenu);
 				//Èç¹ûµã»÷µ½ÁËµ¥´Ê±³ËÐ
 				else if (m.x > 670 && m.x < 875 && m.y > 26 && m.y < 107)
 				{
-					reciteWords();
+					choseReciteWords();
 					if (isReturnReciteWords == 1)
 					{
 						isReturnReciteWords = 0;
@@ -440,12 +442,506 @@ void drawEmptyWordsBook()
 {
 	putimage(0, 0, &EmptyWordsBook);
 }
+
+void choseReciteWords()
+{
+	isReturnReciteWords = 0;
+	loadimage(&reciteInit, _T("C:\\Users\\ztlzl\\Desktop\\CE-Dict\\reciteInit.jpg"));
+	MOUSEMSG m;
+	while (1)
+	{
+		if (MouseHit())
+		{
+			m = GetMouseMsg();
+			//Èç¹ûÊó±êµã»÷
+			if (m.mkLButton == true)
+			{
+				//Èç¹ûµã»÷µ½ÁË·µ»Ø
+				if (m.x > 850 && m.x < 994 && m.y > 5 && m.y < 145)
+				{
+					//Èç¹ûÔÚ±³ËÐ³õÊ¼½çÃæµã»÷µ½ÁË·µ»Ø
+					isReturnReciteWords = 1;
+						break;
+				}
+				//Èç¹ûµã»÷µ½ÁËË³Ðò±³ËÐ
+				else if (m.x > 278 && m.x < 711 && m.y > 126 && m.y < 219)
+				{
+					reciteWords();
+					//Èç¹ûÔÚË³Ðò±³µ¥´ÊÖÐµã»÷µ½ÁË·µ»Ø£¬Ôò·µ»Ø±³ËÐ³õÊ¼½çÃæ
+					if (isReturnReciteWords == 1)
+						isReturnReciteWords = 0;
+				}
+				//Èç¹ûµã»÷µ½ÁËÇ¿»¯±³ËÐ
+				else if (m.x > 279 && m.x < 709 && m.y > 254 && m.y < 343)
+				{
+					reciteStrengthenWords();
+					//Èç¹ûÔÚÇ¿»¯±³µ¥´ÊÖÐµã»÷µ½ÁË·µ»Ø£¬Ôò·µ»Ø±³ËÐ³õÊ¼½çÃæ
+					if (isReturnReciteWords == 1)
+						isReturnReciteWords = 0;
+				}
+			}
+		}
+		putimage(0, 0, &reciteInit);
+		FlushBatchDraw();
+	}
+}
+
+void reciteStrengthenWords()
+{
+	loadimage(&ReciteStrengthenChinese, _T("C:\\Users\\ztlzl\\Desktop\\CE-Dict\\reciteStrengthenChinese.jpg"));
+	loadimage(&ReciteStrengthenEnglish, _T("C:\\Users\\ztlzl\\Desktop\\CE-Dict\\reciteStrengthenEnglish.jpg"));
+	loadimage(&EndReciteStrengthenWord, _T("C:\\Users\\ztlzl\\Desktop\\CE-Dict\\endReciteStrengthenWord.jpg"));
+	sortMistakeNumOfWords();//¶ÔÇ°Ãæµ¥´ÊµÄÇé¿ö½øÐÐÅÅÐò
+	
+	if (sortedWords[0].errorTimes == 0)
+	{
+		endReciteStrengthenWord();
+		//Èç¹ûµã»÷µ½ÁË·µ»Ø
+		if (isReturnReciteWords == 1)
+			return;
+	}
+
+	//ÅÐ¶ÏÇ¿»¯¼ÇÒäµ¥´ÊµÄÔÚÅÅÐòÊý×éµ±ÖÐµÄ×î´óÖµ,×î´óÖµÎªmaxIndex£¬ÇÒ²»°üº¬maxIndex
+	maxIndex = reciteStrengthenWordIndex;
+	while (sortedWords[maxIndex].errorTimes > 0)
+	{
+		maxIndex++;
+	}
+
+	while (1)
+	{
+		if (modeOfReciteWords == 0)
+			//±³ÖÐÎÄ
+		{
+			reciteStrengthenChinese();
+			//Èç¹ûµã»÷µ½ÁË·µ»Ø
+			if (isReturnReciteWords == 1)
+				break;
+		}
+		else
+			//±³Ó¢ÎÄ
+		{
+			reciteStrengthenEnglish();
+			//Èç¹ûµã»÷µ½ÁË·µ»Ø
+			if (isReturnReciteWords == 1)
+				break;
+		}
+	}
+}
  
+void endReciteStrengthenWord()
+{
+	MOUSEMSG m;
+	while (1)
+	{
+		if (MouseHit())
+		{
+			m = GetMouseMsg();
+			//Èç¹ûÊó±êµã»÷
+			if (m.mkLButton == true)
+			{
+				//Èç¹ûµã»÷µ½ÁË·µ»Ø
+				if (m.x > 813 && m.x < 995 && m.y > 5 && m.y < 184)
+				{
+					isReturnReciteWords = 1;
+					userAnswer = -1;
+					isNextOrLast = true;
+					break;
+				}
+			}
+		}
+		putimage(0, 0, &EndReciteStrengthenWord);
+		FlushBatchDraw();
+	}
+}
+
+void reciteStrengthenChinese()
+{
+	putimage(0, 0, &ReciteStrengthenChinese);
+	setbkmode(TRANSPARENT);	//ÉèÖÃ×ÖÌå±³¾°É«ÎªÍ¸Ã÷
+	MOUSEMSG m;
+	while (1)
+	{
+		if (MouseHit())
+		{
+			m = GetMouseMsg();
+			//Èç¹ûÊó±êµã»÷±³ÖÐÎÄ
+			if (m.mkLButton == true)
+			{
+				//Èç¹ûµã»÷µ½ÁË±³ÖÐÎÄ
+				if (m.x > 5 && m.x < 178 && m.y > 5 && m.y < 130)
+				{
+					modeOfReciteWords = 0;
+				}
+				//Èç¹ûµã»÷µ½ÁË±³Ó¢ÎÄ
+				else if (m.x > 7 && m.x < 167 && m.y > 145 && m.y < 270)
+				{
+					modeOfReciteWords = 1;
+					break;
+				}
+				//Èç¹ûµã»÷µ½ÁË·µ»Ø
+				else if (m.x > 877 && m.x < 994 && m.y > 1 && m.y < 112)
+				{
+					isReturnReciteWords = 1;
+					userAnswer = -1;
+					isNextOrLast = true;
+					break;
+				}
+				//Èç¹ûµã»÷µ½ÁËlast
+				else if (m.x > 12 && m.x < 129 && m.y > 532 && m.y < 588)
+				{
+					reciteStrengthenWordIndex--;
+					if (reciteStrengthenWordIndex < 0)
+						reciteStrengthenWordIndex = 0;
+					else
+					{
+						isNextOrLast = true;
+						userAnswer = -1;
+					}
+				}
+				//Èç¹ûµã»÷µ½ÁËnext
+				else if (m.x > 847 && m.x < 949 && m.y > 539 && m.y < 595)
+				{
+					reciteStrengthenWordIndex++;
+					if (reciteStrengthenWordIndex >= maxIndex)
+						reciteStrengthenWordIndex = maxIndex - 1;
+					else
+					{
+						isNextOrLast = true;
+						userAnswer = -1;
+					}
+				}
+				//Èç¹ûµã»÷µ½ÁËÑ¡ÏîA
+				else if (m.x > 322 && m.x < 400 && m.y > 185 && m.y < 256)
+				{
+					userAnswer = 0;
+				}
+				//Èç¹ûµã»÷µ½ÁËÑ¡ÏîB
+				else if (m.x > 323 && m.x < 390 && m.y > 274 && m.y < 348)
+				{
+					userAnswer = 1;
+				}
+				//Èç¹ûµã»÷µ½ÁËÑ¡ÏîC
+				else if (m.x > 326 && m.x < 399 && m.y > 375 && m.y < 436)
+				{
+					userAnswer = 2;
+				}
+				//Èç¹ûµã»÷µ½ÁËÑ¡ÏîD
+				else if (m.x > 321 && m.x < 403 && m.y > 466 && m.y < 529)
+				{
+					userAnswer = 3;
+				}
+			}
+		}
+
+		//Èç¹ûÓÐ¼üÅÌÏûÏ¢
+		if (_kbhit())
+		{
+			char ch = _getch();
+			if (ch == 'a' || ch == 'A')
+			{
+				userAnswer = 0;
+			}
+			else if (ch == 'b' || ch == 'B')
+			{
+				userAnswer = 1;
+			}
+			else if (ch == 'c' || ch == 'C')
+			{
+				userAnswer = 2;
+			}
+			else if (ch == 'd' || ch == 'D')
+			{
+				userAnswer = 3;
+			}
+		}
+
+		drawReciteStrengthenChinese();
+		FlushBatchDraw();
+	}
+}
+
+void drawReciteStrengthenChinese()
+{
+	srand((unsigned)time(NULL));
+	CHAR WORD[15];
+	putimage(0, 0, &ReciteStrengthenChinese);
+
+	if (isNextOrLast == true)
+	{
+		answer = rand() % 4;//µ±Ç°µÄ´ð°¸·ÅÔÚÄÄ¸öÑ¡ÏîÀïÃæ£¬Ëæ»úÉú³É
+		int num;
+		int optionsNum[4];
+
+		//¸øËÄ¸öÑ¡ÏîËæ»ú¸³ÉÏ²»ÊÇ·Çµ±Ç°±³ËÐÑ¡ÏîµÄÖµ,²¢ÇÒÕâËÄ¸öÖµ²»ÏàµÈ
+		do
+		{
+			do
+			{
+				num = rand() % 3665;
+			} while (num == sortedWords[reciteStrengthenWordIndex].index);
+			wsprintf(A, "%s", word[num].Chinese);
+			optionsNum[0] = num;
+			do
+			{
+				num = rand() % 3665;
+			} while (num == sortedWords[reciteStrengthenWordIndex].index);
+			wsprintf(B, "%s", word[num].Chinese);
+			optionsNum[1] = num;
+			do
+			{
+				num = rand() % 3665;
+			} while (num == sortedWords[reciteStrengthenWordIndex].index);
+			wsprintf(C, "%s", word[num].Chinese);
+			optionsNum[2] = num;
+			do
+			{
+				num = rand() % 3665;
+			} while (num == sortedWords[reciteStrengthenWordIndex].index);
+			wsprintf(D, "%s", word[num].Chinese);
+			optionsNum[3] = num;
+		} while (fourNumIsNotEqual(optionsNum) == false);
+
+		//ÕýÈ·´ð°¸ÔÚÄÄ¸öÑ¡ÏîÉÏËæ»úÉú³Éºó¿ªÊ¼¸³Öµ
+		switch (answer)
+		{
+		case 0:wsprintf(A, "%s", word[sortedWords[reciteStrengthenWordIndex].index].Chinese);
+			break;
+		case 1:wsprintf(B, "%s", word[sortedWords[reciteStrengthenWordIndex].index].Chinese);
+			break;
+		case 2:wsprintf(C, "%s", word[sortedWords[reciteStrengthenWordIndex].index].Chinese);
+			break;
+		case 3:wsprintf(D, "%s", word[sortedWords[reciteStrengthenWordIndex].index].Chinese);
+			break;
+		}
+
+		isNextOrLast = false;
+	}
+
+	wsprintf(WORD, "%s", word[sortedWords[reciteStrengthenWordIndex].index].English);
+
+	settextstyle(30, 0, _T("ËÎÌå"));
+	settextcolor(BLACK);
+	outtextxy(431, 196, A);
+	outtextxy(420, 290, B);
+	outtextxy(418, 387, C);
+	outtextxy(420, 478, D);
+	settextstyle(60, 0, _T("ËÎÌå"));
+	settextcolor(RED);
+	outtextxy(374, 85, WORD);
+
+	CHAR tips[30];
+	if (userAnswer == -1)
+		//ÓÃ»§»¹Î´½øÐÐ×÷´ð
+	{
+		wsprintf(tips, "%s", "Çëµã»÷ÆÁÄ»»òÓÃ¼üÅÌ×÷´ð");
+	}
+	else if (userAnswer == answer)
+	{
+		wsprintf(tips, "%s", "×÷´ðÕýÈ·");
+		notSortWords[sortedWords[reciteStrengthenWordIndex].index].errorTimes--;
+		if (notSortWords[sortedWords[reciteStrengthenWordIndex].index].errorTimes < 0)
+		{
+			notSortWords[sortedWords[reciteStrengthenWordIndex].index].errorTimes = 0;
+		}
+	}
+	else
+	{
+		wsprintf(tips, "%s", "×÷´ð´íÎó");
+	}
+
+	settextstyle(30, 0, _T("ËÎÌå"));
+	settextcolor(GREEN);
+	outtextxy(320, 25, tips);
+}
+
+void reciteStrengthenEnglish()
+{
+	putimage(0, 0, &ReciteStrengthenEnglish);
+	FlushBatchDraw();
+	setbkmode(TRANSPARENT);	//ÉèÖÃ×ÖÌå±³¾°É«ÎªÍ¸Ã÷
+	MOUSEMSG m;
+	while (1)
+	{
+		if (MouseHit())
+		{
+			m = GetMouseMsg();
+			//Èç¹ûÊó±êµã»÷
+			if (m.mkLButton == true)
+			{
+				//Èç¹ûµã»÷µ½ÁË·µ»Ø
+				if (m.x > 871 && m.x < 995 && m.y > 1 && m.y < 128)
+				{
+					isReturnReciteWords = 1;
+					numOfLetterInReciteWords = 0;
+					userAnswer = -1;
+					break;
+				}
+				//Èç¹ûµã»÷µ½ÁËLAST
+				else if (m.x > 18 && m.x < 150 && m.y > 533 && m.y < 590)
+				{
+					reciteStrengthenWordIndex--;
+					if (reciteStrengthenWordIndex < 0)
+						reciteStrengthenWordIndex = 0;
+					else
+					{
+						userWord[0] = '\0';
+						isSubmit = false;
+						numOfLetterInReciteWords = 0;
+						userAnswer = -1;
+					}
+				}
+				//Èç¹ûµã»÷µ½ÁËNEXT
+				else if (m.x > 822 && m.x < 988 && m.y > 535 && m.y < 588)
+				{
+					reciteStrengthenWordIndex++;
+					if (reciteStrengthenWordIndex >= maxIndex)
+						reciteStrengthenWordIndex = maxIndex - 1;
+					else
+					{
+						userWord[0] = '\0';
+						isSubmit = false;
+						numOfLetterInReciteWords = 0;
+						userAnswer = -1;
+					}
+				}
+				//Èç¹ûµã»÷µ½ÁË±³ÖÐÎÄ
+				else if (m.x > 5 && m.x < 201 && m.y > 5 && m.y < 138)
+				{
+					modeOfReciteWords = 0;
+					break;
+				}
+				//Èç¹ûµã»÷µ½ÁË±³Ó¢ÎÄ
+				else if (m.x > 4 && m.x < 191 && m.y > 153 && m.y < 302)
+				{
+					modeOfReciteWords = 1;
+				}
+				//Èç¹ûµã»÷µ½ÁË»Ø³µ
+				else if ((m.x > 861 && m.x < 937 && m.y > 289 && m.y < 427) ||
+					(m.x > 802 && m.x < 855 && m.y > 348 && m.y < 425))
+				{
+					isSubmit = true;
+					userWord[numOfLetterInReciteWords] = '\0';
+					if ((strcmp(word[sortedWords[reciteStrengthenWordIndex].index].English, userWord)) == 0)
+					{
+						userAnswer = 1;//´ú±í×÷´ðÕýÈ·
+
+					}
+					else
+					{
+						userAnswer = 2;//´ú±í×÷´ð´íÎó
+					}
+				}
+				//Èç¹ûµã»÷µ½ÁËÉ¾³ý
+				else if (m.x > 815 && m.x < 922 && m.y > 439 && m.y < 501)
+				{
+					if (numOfLetterInReciteWords == 0)
+						userWord[0] = '\0';
+					else if (numOfLetterInReciteWords > 0)
+					{
+						userWord[numOfLetterInReciteWords - 1] = '\0';
+						numOfLetterInReciteWords--;
+					}
+				}
+			}
+		}
+
+		//Èç¹ûÓÐ¼üÅÌÏûÏ¢
+		if (_kbhit())
+		{
+			char ch = _getch();
+			if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'))
+				//Èç¹ûÊÇ×ÖÄ¸
+			{
+				if (ch >= 'a' && ch <= 'z')
+					//Èç¹ûÊÇÐ¡Ð´
+				{
+					userWord[numOfLetterInReciteWords] = ch;
+				}
+				else
+					//Èç¹ûÊÇ´óÐ´
+				{
+					userWord[numOfLetterInReciteWords] = ch + 32;
+				}
+				numOfLetterInReciteWords++;
+			}
+			else if (ch == 8)
+				//É¾³ý¼ü£¨ÍË¸ñ£©
+			{
+				if (numOfLetterInReciteWords == 0)
+					userWord[0] = '\0';
+				else if (numOfLetterInReciteWords > 0)
+				{
+					userWord[numOfLetterInReciteWords - 1] = '\0';
+					numOfLetterInReciteWords--;
+				}
+			}
+			else if (ch == 13)
+				//»Ø³µ¼ü
+			{
+				isSubmit = true;
+				userWord[numOfLetterInReciteWords] = '\0';
+				if ((strcmp(word[sortedWords[reciteStrengthenWordIndex].index].English, userWord)) == 0)
+				{
+					userAnswer = 1;//´ú±í×÷´ðÕýÈ·
+				}
+				else
+				{
+					userAnswer = 2;//´ú±í×÷´ð´íÎó
+				}
+			}
+		}
+
+		drawReciteStrengthenEnglish();
+		FlushBatchDraw();
+	}
+}
+
+void drawReciteStrengthenEnglish()
+{
+	CHAR CHINESE[40];
+	CHAR tips[30];
+
+	if (isSubmit == false)
+	{
+		wsprintf(tips, "%s", "ÇëÊäÈëµ¥´Ê²¢°´»Ø³µ");
+	}
+	else
+	{
+		if (userAnswer == 1)
+		{
+			wsprintf(tips, "%s", "×÷´ðÕýÈ·");
+			notSortWords[sortedWords[reciteStrengthenWordIndex].index].errorTimes--;
+			if (notSortWords[sortedWords[reciteStrengthenWordIndex].index].errorTimes < 0)
+			{
+				notSortWords[sortedWords[reciteStrengthenWordIndex].index].errorTimes = 0;
+			}
+		}
+		else
+		{
+			wsprintf(tips, "%s", "×÷´ð´íÎó");
+		}
+	}
+
+	wsprintf(CHINESE, "%s", word[sortedWords[reciteStrengthenWordIndex].index].Chinese);
+
+	putimage(0, 0, &ReciteStrengthenEnglish);
+	settextstyle(30, 0, _T("ËÎÌå"));
+	settextcolor(GREEN);
+	outtextxy(320, 25, tips);
+	settextstyle(60, 0, _T("ËÎÌå"));
+	settextcolor(RED);
+	outtextxy(375, 182, CHINESE);
+	settextcolor(BLACK);
+	settextstyle(50, 0, _T("ËÎÌå"));
+	userWord[numOfLetterInReciteWords] = '\0';
+	outtextxy(360, 370, userWord);
+}
+
 void reciteWords()
 {
 	loadimage(&ReciteChinese, _T("C:\\Users\\ztlzl\\Desktop\\CE-Dict\\reciteChinese.jpg"));
 	loadimage(&ReciteEnglish, _T("C:\\Users\\ztlzl\\Desktop\\CE-Dict\\reciteEnglish.jpg"));
-	sortMistakeNumOfWords();//¶ÔÇ°Ãæµ¥´ÊµÄÇé¿ö½øÐÐÅÅÐò
 	while (1)
 	{
 		if (modeOfReciteWords == 0)
@@ -527,8 +1023,10 @@ void reciteChinese()
 				else if (m.x > 761 && m.x < 875 && m.y > 3 && m.y < 114)
 				{
 					if (word[reciteWordIndex].isInWordsBook == false)
+					{
 						word[reciteWordIndex].isInWordsBook = true;
-					wordsInWordsBook++;
+						wordsInWordsBook++;
+					}
 				}
 				//Èç¹ûµã»÷µ½ÁËÑ¡ÏîA
 				else if (m.x > 322 && m.x < 400 && m.y > 185 && m.y < 256)
@@ -687,8 +1185,10 @@ void reciteEnglish()
 				if (m.x > 726 && m.x < 866 && m.y > 2 && m.y < 131)
 				{
 					if (word[reciteWordIndex].isInWordsBook == false)
+					{
 						word[reciteWordIndex].isInWordsBook = true;
-					wordsInWordsBook++;
+						wordsInWordsBook++;
+					}
 				}
 				//Èç¹ûµã»÷µ½ÁË·µ»Ø
 				else if (m.x > 871 && m.x < 995 && m.y > 1 && m.y < 128)
@@ -1045,6 +1545,15 @@ void testWordsChilese()
 						if (chineseExercise[i].userAnswer == chineseExercise[i].trueAnswer)
 						{
 							trueNumInTestChinese++;
+							//Èç¹û´ð¶ÔÁË¼õÉÙ´íÎó´ÎÊý
+							notSortWords[wordsNum[i]].errorTimes--;
+							if (notSortWords[wordsNum[i]].errorTimes < 0)
+								notSortWords[wordsNum[i]].errorTimes = 0;
+						}
+						//Èç¹û´íÎóÔò¼ÇÂ¼µ½´íÎó´ÎÊý
+						else
+						{
+							notSortWords[wordsNum[i]].errorTimes++;
 						}
 					}
 				}
@@ -1091,9 +1600,18 @@ void testWordsChilese()
 				isSubmitInTestChinese = 1;
 				for (int i = 0; i < 10; i++)
 				{
-					if (chineseExercise[testWordChinese].userAnswer == chineseExercise[testWordChinese].trueAnswer)
+					if (chineseExercise[i].userAnswer == chineseExercise[i].trueAnswer)
 					{
 						trueNumInTestChinese++;
+						//Èç¹û´ð¶ÔÁË¼õÉÙ´íÎó´ÎÊý
+						notSortWords[wordsNum[i]].errorTimes--;
+						if (notSortWords[wordsNum[i]].errorTimes < 0)
+							notSortWords[wordsNum[i]].errorTimes = 0;
+					}
+					//Èç¹û´íÎóÔò¼ÇÂ¼µ½´íÎó´ÎÊý
+					else
+					{
+						notSortWords[wordsNum[i]].errorTimes++;
 					}
 				}
 			}
@@ -1330,6 +1848,14 @@ void testWordsEnglish()
 						if (strcmp(englishExercise[i].userAnswer, word[englishExercise[i].index].English) == 0)
 						{
 							trueNumInTestEnglish++;
+							//Èç¹û´ð¶ÔÁË¼õÉÙ´íÎó´ÎÊý
+							notSortWords[indexNum[i]].errorTimes--;
+							if (notSortWords[indexNum[i]].errorTimes < 0)
+								notSortWords[indexNum[i]].errorTimes = 0;
+						}
+						//Èç¹û´ð°¸´íÁË
+						{
+							notSortWords[indexNum[i]].errorTimes++;
 						}
 					}
 				}
@@ -1403,6 +1929,22 @@ void testWordsEnglish()
 					if (strcmp(englishExercise[i].userAnswer, word[englishExercise[i].index].English) == 0)
 					{
 						trueNumInTestChinese++;
+					}
+				}trueNumInTestEnglish = 0;
+				isSubmitInTestEnglish = 1;
+				for (int i = 0; i < 10; i++)
+				{
+					if (strcmp(englishExercise[i].userAnswer, word[englishExercise[i].index].English) == 0)
+					{
+						trueNumInTestEnglish++;
+						//Èç¹û´ð¶ÔÁË¼õÉÙ´íÎó´ÎÊý
+						notSortWords[indexNum[i]].errorTimes--;
+						if (notSortWords[indexNum[i]].errorTimes < 0)
+							notSortWords[indexNum[i]].errorTimes = 0;
+					}
+					//Èç¹û´ð°¸´íÁË
+					{
+						notSortWords[indexNum[i]].errorTimes++;
 					}
 				}
 			}
@@ -1662,6 +2204,15 @@ rewind(fp);//Ê¹µÃÎÄ¼þ¶ÁÐ´Ö¸ÕëÎ»ÖÃÖØÐÂ»Øµ½¿ªÍ·£¬ÒòÎªÔÚÐ´ÈëÎÄ¼þÊ±ÎÄ¼þ¶ÁÐ´Ö¸ÕëÔÚÎÄ¼
 */
 
 /*
+#pragma once
+#include<conio.h>
+#include <graphics.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+#include<locale.h>
+#include<wchar.h>
+#include <ctype.h>
 int main()
 {
 	IMAGE imgMenu;//init½çÃæ
