@@ -3,7 +3,7 @@
 /*
 未完成：
 1.强化记忆---编写强化记忆函数----------√
-2.单词本单词，错误次数记忆
+2.单词本单词，错误次数记忆---------√
 3.英语查询---英文全查询函数
 4.添加必要的音效
 5.中文查询---尝试一下，可能不在我能力范围之类
@@ -82,7 +82,12 @@ int main()
 				//如果点击到了单词查询
 				else if (m.x > 669 && m.x < 876 && m.y > 304 && m.y < 385)
 				{
-
+					searchInit();
+					if (isReturnSearchWords == 1)
+					{
+						isReturnSearchWords = 0;
+						goto loop;
+					}
 				}
 				//如果点击到了单词本
 				else if (m.x > 662 && m.x < 879 && m.y > 428 && m.y < 512)
@@ -1919,7 +1924,7 @@ void testWordsEnglish()
 				//确保字符串已\0结束
 				englishExercise[testWordEnglish].userAnswer[englishExercise[testWordEnglish].nextLetterIndex] = '\0';
 			}
-			else if (ch == 8)
+			else if (ch == 13)
 				//回车
 			{
 				trueNumInTestEnglish = 0;
@@ -2137,7 +2142,24 @@ void loadHistoryData()
 	modeOfReciteWords //背单词的模式，0为背中文，1为背英文，默认为0
 	reciteWordIndex //当前背诵的单词的下标，默认为0
 	*/
-	fscanf(fp, "%d %d %d", &browseIndex, &modeOfReciteWords, &reciteWordIndex);
+	fscanf(fp, "%d %d %d %d", &browseIndex, &modeOfReciteWords, &reciteWordIndex, &wordsInWordsBook);
+
+	int IsInWordBook = 0;
+	int ErrorsTimes = 0;
+	for (int i = 0; i < 3665; i++)
+	{
+		fscanf(fp, "%d %d", &IsInWordBook, &ErrorsTimes);
+		if (IsInWordBook == 1)
+		{
+			word[i].isInWordsBook = true;
+		}
+		else
+		{
+			word[i].isInWordsBook = false;
+		}
+		notSortWords[i].errorTimes = ErrorsTimes;
+	}
+
 	fclose(fp);
 }
 
@@ -2156,12 +2178,34 @@ void saveThisData()
 	browseIndex //单词浏览的结构体数组下标
 	modeOfReciteWords //背单词的模式，0为背中文，1为背英文，默认为0
 	reciteWordIndex //当前背诵的单词的下标，默认为0
+	wordsInWordsBook//单词本中单词的个数
 	*/
 	fputs(_itoa(browseIndex, s, 10), fp);
 	fputs("\n", fp);
 	fputs(_itoa(modeOfReciteWords, s, 10), fp);
 	fputs("\n", fp);
 	fputs(_itoa(reciteWordIndex, s, 10), fp);
+	fputs("\n", fp);
+	fputs(_itoa(wordsInWordsBook, s, 10), fp);
+	fputs("\n", fp);
+
+	/*
+	写入单词是否在单词本中  单词的错误次数
+	两个数据一行，每一行当中的第一个数据是当前单词的是否在单词本中，
+	第二个数据是错误了多少次
+	在单词本中为1，不在单词本中为0
+	*/
+	int IsInWordBook = 0;
+	int ErrorsTimes = 0;
+	for (int i = 0; i < 3665; i++)
+	{
+		IsInWordBook = (word[i].isInWordsBook == true) ? 1 : 0;
+		ErrorsTimes = notSortWords[i].errorTimes;
+		fputs(_itoa(IsInWordBook, s, 10), fp);
+		fputs(" ", fp);
+		fputs(_itoa(ErrorsTimes, s, 10), fp);
+		fputs("\n", fp);
+	}
 	fclose(fp);
 }
 
@@ -2193,6 +2237,215 @@ int comp(const void*a, const void*b)
 	}
 	return ret;
 }
+
+void searchInit()
+{
+	loadimage(&SearchInit, _T("C:\\Users\\ztlzl\\Desktop\\CE-Dict\\searchInit.jpg"));
+	loadimage(&EnglishToChinese, _T("C:\\Users\\ztlzl\\Desktop\\CE-Dict\\EnglishToChinese.jpg"));
+	loadimage(&ChineseToEnglish, _T("C:\\Users\\ztlzl\\Desktop\\CE-Dict\\ChineseToEnglish.jpg"));
+
+	isReturnSearchWords = 0;
+	MOUSEMSG m;
+	while (1)
+	{
+		if (MouseHit())
+		{
+			m = GetMouseMsg();
+			//如果鼠标点击
+			if (m.mkLButton == true)
+			{
+				//如果点击到了中文查询英文
+				if (m.x > 250 && m.x < 790 && m.y > 220 && m.y < 315)
+				{
+					chineseToEnglish();
+					if (isReturnSearchWords == 1)
+					{
+						isReturnSearchWords = 0;
+					}
+				}
+				//如果点击到了英文查询中文
+				else if (m.x > 240 && m.x < 778 && m.y > 350 && m.y < 447)
+				{
+					englishToChinese();
+					if (isReturnSearchWords == 1)
+					{
+						isReturnSearchWords = 0;
+						isSubmitSearchEnglishToChinese = false;
+						lengthOfSearchEnglishToChinese = 0;
+						searchEnglishToChinese[0] = '\0';
+					}
+				}
+				//如果点击到了返回
+				else if (m.x > 860 && m.x < 993 && m.y > 4 && m.y < 148)
+				{
+					isReturnSearchWords = 1;
+					break;
+				}
+			}
+		}
+		putimage(0, 0, &SearchInit);
+		FlushBatchDraw();
+	}
+}
+
+void englishToChinese()
+{
+	MOUSEMSG m;
+	while (1)
+	{
+		if (MouseHit())
+		{
+			m = GetMouseMsg();
+			//如果鼠标点击
+			if (m.mkLButton == true)
+			{
+				//如果点击到了返回
+				if (m.x > 851 && m.x < 992 && m.y > 6 && m.y < 146)
+				{
+					isReturnSearchWords = 1;
+					break;
+				}
+			}
+		}
+
+		//如果有键盘消息
+		if (_kbhit())
+		{
+			char ch = _getch();
+			if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'))
+				//如果是字母
+			{
+				searchEnglishToChinese[lengthOfSearchEnglishToChinese] = ch;
+				searchEnglishToChinese[lengthOfSearchEnglishToChinese + 1] = '\0';
+				lengthOfSearchEnglishToChinese++;
+
+				//不要超过数组上界
+				if (lengthOfSearchEnglishToChinese >= 24)
+					lengthOfSearchEnglishToChinese = 23;
+			}
+			//退格
+			else if (ch == 8)
+			{
+				//不要超过数组下界
+				if (lengthOfSearchEnglishToChinese == 0)
+					searchEnglishToChinese[0] = '\0';
+				else
+				{
+					searchEnglishToChinese[lengthOfSearchEnglishToChinese - 1] = '\0';
+					lengthOfSearchEnglishToChinese--;
+				}
+			}
+			//回车
+			else if (ch == 13)
+			{
+				isSubmitSearchEnglishToChinese = true;
+				if (searchEnglishToChinese[0] != '\0')
+				{
+					fromEnglishSearchChinese(searchEnglishToChinese);
+				}
+				else
+				{
+					wordIndexInSearchEnglishToChinese = -1;
+				}
+			}
+		}
+
+		drawEnglishToChinese();
+		FlushBatchDraw();
+	}
+}
+
+void drawEnglishToChinese()
+{
+	setbkmode(TRANSPARENT);	//设置字体背景色为透明
+	putimage(0, 0, &EnglishToChinese);
+
+	settextstyle(50, 0, _T("宋体"));
+	settextcolor(BLACK);
+	outtextxy(400, 210, searchEnglishToChinese);
+
+	CHAR searchChinese[50];
+	//如果还没提交过
+	if (isSubmitSearchEnglishToChinese == false)
+	{
+		wsprintf(searchChinese, "%s", "按回车键发起查询");
+	}
+	else
+	{
+		if (wordIndexInSearchEnglishToChinese == -1)
+		{
+			wsprintf(searchChinese, "%s", "未找到该单词");
+		}
+		else
+		{
+			wsprintf(searchChinese, "%s", word[wordIndexInSearchEnglishToChinese].Chinese);
+		}
+	}
+	settextcolor(RED);
+	outtextxy(400, 350, searchChinese);
+}
+
+void drawChineseToEnglish()
+{
+
+}
+
+void chineseToEnglish()
+{
+
+}
+
+void fromEnglishSearchChinese(char *a)
+{
+	//查找
+	int i = 0;
+	for (i = 0; i < 3665; i++)
+	{
+		if (_stricmp(a, word[i].English) == 0)
+		{
+			wordIndexInSearchEnglishToChinese = i;
+			break;
+		}
+	}
+
+	//如果没有查询到
+	if (i == 3665)
+		wordIndexInSearchEnglishToChinese = -1;
+}
+
+/*
+250 220 中-英  英-中
+790 217
+260 315
+791 322
+240 350
+778 352
+247 447
+776 444
+
+
+860 4
+993 1
+864 148
+989 150
+*/
+
+/*
+395 188
+723 180
+398 266
+736 262
+397 340
+690 345
+402 422
+703 424
+
+
+851 6
+992 5
+851 146
+991 147
+*/
 
 /*
 rewind(fp);//使得文件读写指针位置重新回到开头，因为在写入文件时文件读写指针在文件末尾

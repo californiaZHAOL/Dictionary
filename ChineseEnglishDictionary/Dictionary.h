@@ -82,10 +82,15 @@ int isSubmitInTestEnglish = 0;//测验单词测验英文是否点击了提交，
 int reciteWordIndex = 0;//当前顺序背诵的单词的下标，默认为0
 int reciteStrengthenWordIndex = 0;//当前强化背诵的单词在排序数组当中的下标，默认为0
 int maxIndex;//判断强化记忆单词的在排序数组当中的最大值,最大值为maxIndex，且不包含maxIndex
+int isReturnSearchWords;//在查询的界面下，标记是否退出，为1则表示退出，0表示不退出
+int lengthOfSearchEnglishToChinese = 0;//英文搜索中文模式,用户输入的下一个字母储存在数组里面的下标
+int wordIndexInSearchEnglishToChinese = -1;//英文搜索中文模式,如果搜索到了，则储存的是下标，未搜索到为-1
+bool isSubmitSearchEnglishToChinese = false;//英文搜索中文模式,用户是否提交过
 CHAR A[40];//背单词背中文模式下选项A的内容
 CHAR B[40];//背单词背中文模式下选项B的内容
 CHAR C[40];//背单词背中文模式下选项C的内容
 CHAR D[40];//背单词背中文模式下选项D的内容
+CHAR searchEnglishToChinese[25] = {0};//英文搜索中文模式，用户的答案
 CHAR userWord[20];//在背单词背英语的界面用户输入的单词
 time_t nowTime, beginTime;//测验计时开始和结束
 
@@ -102,6 +107,9 @@ IMAGE reciteInit;//背单词初始选择界面
 IMAGE testWords;//单词测验初始界面
 IMAGE testWordsChileseIMG;//单词测验测验中文界面
 IMAGE testWordsEnglishIMG;//单词测验测验英文界面
+IMAGE SearchInit;//搜索功能的初始界面
+IMAGE EnglishToChinese;//英文搜索中文的界面
+IMAGE ChineseToEnglish;//中文搜索英文的界面
 
 void readWord();//从单词文件中读取单词存放在结构体数组中
 void writeWord();//将结构体数组以二进制的形式写入文件
@@ -133,5 +141,11 @@ void drawTestWordsEnglish();//画单词测验中测验英文
 bool tenNumIsNotEqual(int *a);//判断一个有十个数的数组里面的数互不相等
 bool fourNumIsNotEqual(int *a);//判断一个有四个数的数组里面的数互不相等
 void sortMistakeNumOfWords();//给保存错误次数的结构体数组排序
+void searchInit();//搜索功能的初始界面
+void englishToChinese();//英文搜索中文的界面
+void chineseToEnglish();//中文搜索英文的界面
+void drawEnglishToChinese();//画英文搜索中文的界面
+void drawChineseToEnglish();//画中文搜索英文的界面
 int comp(const void*a, const void*b);//qsort的比较函数
+void fromEnglishSearchChinese(char *a);//由给定的英文搜索中文，返回下标，没有搜索到返回-1
 void endReciteStrengthenWord();//结束强化记忆的页面
