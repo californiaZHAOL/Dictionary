@@ -1,12 +1,9 @@
 #include "Dictionary.h"
 
 /*
-未完成：
-1.强化记忆---编写强化记忆函数----------√
-2.单词本单词，错误次数记忆---------√
-3.英语查询---英文全查询函数--------√
-4.添加必要的音效---------√
-5.中文查询---尝试一下，可能不在我能力范围之类
+根据中文查询英文
+原因：easyX不支持从键盘输入中文，需要使用WindowsAPI，在easyX贴吧仅有的关于中文输入的帖子只有对应c++语言的实现
+虽然不能输入，但我还是提供了一个已知中文字符串搜索的函数fromChineseSearchEnglish(char *a);
 */
 
 int main()
@@ -25,7 +22,17 @@ int main()
 	writeWord();//调用函数把结构体数组的数据以二进制的形式存放到文件中
 	MOUSEMSG m;
 	loop:putimage(0, 0, &imgMenu);
+
+	// 设置 XOR 绘图模式
+	setwritemode(R2_XORPEN);
+	//设置画线风格
+	setlinestyle(PS_JOIN_BEVEL, 5);
+	setlinecolor(RGB(255, 1, 255));
+	//根据音乐音效的开关决定是否画线
+	if (musicIsOpen == false)
+		line(19, 198, 77, 260);
 	FlushBatchDraw();
+
 	while (1)
 	{
 		if (MouseHit())
@@ -39,6 +46,35 @@ int main()
 				{
 					click();
 					loadWordTxt();
+				}
+				//如果点击到了音效开关
+				else if (m.x > 2 && m.x < 97 && m.y > 185 && m.y < 273)
+				{
+					click();
+					if (musicIsOpen == false)
+					{
+						musicIsOpen = true;
+						// 设置 XOR 绘图模式
+						setwritemode(R2_XORPEN);
+						//设置画线风格
+						setlinestyle(PS_JOIN_BEVEL, 5);
+						setlinecolor(RGB(255, 1, 255));
+						//根据音乐音效的开关决定是否画线
+						line(19, 198, 77, 260);
+						FlushBatchDraw();
+					}
+					else
+					{
+						musicIsOpen = false;
+						// 设置 XOR 绘图模式
+						setwritemode(R2_XORPEN);
+						//设置画线风格
+						setlinestyle(PS_JOIN_BEVEL, 5);
+						setlinecolor(RGB(255, 1, 255));
+						//根据音乐音效的开关决定是否画线
+						line(19, 198, 77, 260);
+						FlushBatchDraw();
+					}
 				}
 				//如果点击到了载入历史数据
 				else if (m.x > 393 && m.x < 603 && m.y > 161 && m.y < 256)
@@ -2464,12 +2500,38 @@ void drawEnglishToChinese()
 
 void drawChineseToEnglish()
 {
-
+	setbkmode(TRANSPARENT);	//设置字体背景色为透明
+	putimage(0, 0, &ChineseToEnglish);
+	settextstyle(80, 0, _T("宋体"));
+	settextcolor(RED);
+	CHAR mes[40];
+	wsprintf(mes, "%s", "功能维护，敬请期待");
+	outtextxy(150, 260, mes);
 }
 
 void chineseToEnglish()
 {
-
+	MOUSEMSG m;
+	while (1)
+	{
+		if (MouseHit())
+		{
+			m = GetMouseMsg();
+			//如果鼠标点击
+			if (m.mkLButton == true)
+			{
+				click();
+				//如果点击到了返回
+				if (m.x > 851 && m.x < 992 && m.y > 6 && m.y < 146)
+				{
+					isReturnSearchWords = 1;
+					break;
+				}
+			}
+		}
+		drawChineseToEnglish();
+		FlushBatchDraw();
+	}
 }
 
 void fromEnglishSearchChinese(char *a)
@@ -2501,102 +2563,26 @@ void fromEnglishSearchChinese(char *a)
 
 void click()
 {
-	mciSendString(_T("close click"), NULL, 0, NULL);
-	mciSendString(_T("open C:\\Users\\ztlzl\\Desktop\\CE-Dict\\click.wma alias click"), NULL, 0, NULL);
-	mciSendString(_T("play click"), NULL, 0, NULL);
+	if (musicIsOpen == true)
+	{
+		mciSendString(_T("close click"), NULL, 0, NULL);
+		mciSendString(_T("open C:\\Users\\ztlzl\\Desktop\\CE-Dict\\click.wma alias click"), NULL, 0, NULL);
+		mciSendString(_T("play click"), NULL, 0, NULL);
+	}
 }
 
-/*
-int i = 0;
-for (i = 0; i < 3665; i++)
-	{
-		if (_stricmp(a, word[i].English) == 0)
-		{
-			wordIndexInSearchEnglishToChinese = i;
-			break;
-		}
-	}
-*/
-
-/*
-250 220 中-英  英-中
-790 217
-260 315
-791 322
-240 350
-778 352
-247 447
-776 444
-
-860 4
-993 1
-864 148
-989 150
-*/
-
-/*
-395 188
-723 180
-398 266
-736 262
-397 340
-690 345
-402 422
-703 424
-
-
-851 6
-992 5
-851 146
-991 147
-*/
-
-/*
-rewind(fp);//使得文件读写指针位置重新回到开头，因为在写入文件时文件读写指针在文件末尾
-	Word temp;
-	while (fread(&temp, sizeof(Word), 1, fp) == 1)
-	{
-		printf("%s  %s\n", temp.English, temp.Chinese);
-	}
-*/
-
-/*
-#pragma once
-#include<conio.h>
-#include <graphics.h>
-#include<stdio.h>
-#include<stdlib.h>
-#include<time.h>
-#include<locale.h>
-#include<wchar.h>
-#include <ctype.h>
-int main()
+void fromChineseSearchEnglish(char *a)
 {
-	IMAGE imgMenu;//init界面
-	setlocale(LC_ALL, "");
-	initgraph(1000, 600);
-	// 获取窗口句柄
-	HWND hwnd = GetHWnd();
-	//把游戏名称设置在窗口
-	SetWindowText(hwnd, _T("CET4英汉词典"));
-	loadimage(&imgMenu, _T("C:\\Users\\ztlzl\\Desktop\\CE-Dict\\testWordsEnglish.jpg"));
-	putimage(0, 0, &imgMenu);
-	//_getch()
-	MOUSEMSG m;
-	int i = 0;
-	while (i < 8)
+	int index = -1;
+	for (int i = 0; i < 3665; i++)
 	{
-		if (MouseHit())
+		//如果找到了
+		if (strstr(a, word[i].Chinese) != NULL)
 		{
-			m = GetMouseMsg();
-			//如果鼠标点击
-			if (m.mkLButton == true)
-			{
-				i++;
-				printf("%d %d\n", m.x, m.y);
-			}
+			index = i;
 		}
 	}
-	return 0;
+
+	//如果index=-1表示未匹配到
+	//如果index>=0,表示匹配到了
 }
-*/

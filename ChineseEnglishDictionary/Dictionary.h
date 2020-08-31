@@ -7,6 +7,9 @@
 #include<locale.h>
 #include<wchar.h>
 #include <ctype.h>
+#include <windows.h>
+#include <string.h>
+#pragma comment(lib,"Imm32.lib")
 #pragma comment(lib,"Winmm.lib")
 
 //储存单词的结构体，用typedef定义别名为Word
@@ -66,6 +69,7 @@ int insertReciteWordIndex = 0;//插入的背诵的单词错误次数结构体的
 bool isNextOrLast = true;//表示在背单词的模式下，是否对背单词的题目进行更换，默认为更换
 bool isSubmit = false;//背单词背中文模式下已经提交过答案
 bool isInsert = true;//表示当前的单词是否是插入进去的
+bool musicIsOpen = true;//代表音效是否打开，打开为true，不打开为false
 int userAnswer = -1;//背单词模式下用户点击的回答,-1表示用户还没有进行选择
 int answer;//背单词背中文模式下正确答案的序号
 int numOfLetterInReciteWords = 0;//在背单词背英语的界面用户输入的单词的长度，默认为0
@@ -150,3 +154,4 @@ int comp(const void*a, const void*b);//qsort的比较函数
 void fromEnglishSearchChinese(char *a);//由给定的英文搜索中文，返回下标，没有搜索到返回-1
 void endReciteStrengthenWord();//结束强化记忆的页面
 void click();//发出一次鼠标点击音效
+void fromChineseSearchEnglish(char *a);//由给定的中文搜索英文，返回下标，没有搜索到返回-1
