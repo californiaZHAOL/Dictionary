@@ -1,9 +1,10 @@
 #include "Dictionary.h"
 
 /*
-根据中文查询英文
-原因：easyX不支持从键盘输入中文，需要使用WindowsAPI，在easyX贴吧仅有的关于中文输入的帖子只有对应c++语言的实现
-虽然不能输入，但我还是提供了一个已知中文字符串搜索的函数fromChineseSearchEnglish(char *a);
+说明：根据中文查询英文
+easyX不支持从键盘输入中文，需要使用WindowsAPI，在easyX贴吧仅有的关于中文输入的帖子只有对应c++语言的实现
+我改进了贴吧里面的代码，用了贴吧里面的void GetIMEString(HWND hWnd, string& str);函数实现了中文查找英文的功能
+由于在纯c语言风格的代码中插入了c++的代码，在每一个c++代码块之前我都用//c++ style标注，以示区分
 */
 
 int main()
@@ -830,6 +831,7 @@ void drawReciteStrengthenChinese()
 
 void reciteStrengthenEnglish()
 {
+	isSubmit = false;
 	putimage(0, 0, &ReciteStrengthenEnglish);
 	FlushBatchDraw();
 	setbkmode(TRANSPARENT);	//设置字体背景色为透明
@@ -2502,15 +2504,36 @@ void drawChineseToEnglish()
 {
 	setbkmode(TRANSPARENT);	//设置字体背景色为透明
 	putimage(0, 0, &ChineseToEnglish);
-	settextstyle(80, 0, _T("宋体"));
+	settextstyle(50, 0, _T("宋体"));
+	settextcolor(BLACK);
+	outtextxy(400, 215, str.c_str());
+
+	CHAR searchEnglish[25];
+	if (isSubmitSearchChineseToEnglish == false)
+	{
+		wsprintf(searchEnglish, "%s", "按回车键发起查询");
+	}
+	else
+	{
+		if (wordIndexInSearchChineseToEnglish == -1)
+		{
+			wsprintf(searchEnglish, "%s", "未搜索到");
+		}
+		else
+		{
+			wsprintf(searchEnglish, "%s", word[wordIndexInSearchChineseToEnglish].English);
+		}
+	}
 	settextcolor(RED);
-	CHAR mes[40];
-	wsprintf(mes, "%s", "功能维护，敬请期待");
-	outtextxy(150, 260, mes);
+	outtextxy(400, 350, searchEnglish);
 }
 
 void chineseToEnglish()
 {
+	isSubmitSearchChineseToEnglish = false;
+	HWND hWnd = GetHWnd();
+	settextstyle(30, 0, _T("宋体"));
+	settextcolor(RED);
 	MOUSEMSG m;
 	while (1)
 	{
@@ -2520,15 +2543,68 @@ void chineseToEnglish()
 			//如果鼠标点击
 			if (m.mkLButton == true)
 			{
-				click();
 				//如果点击到了返回
 				if (m.x > 851 && m.x < 992 && m.y > 6 && m.y < 146)
 				{
+					click();
 					isReturnSearchWords = 1;
 					break;
 				}
 			}
 		}
+
+		if (_kbhit()) //如果是ASCII输入
+		{
+			char c = _getch();
+			//退格
+			if (c == '\b')
+			{
+				//c++ style
+				if (str.length() > 0)
+				{
+					if (str.at(str.length() - 1) & 0x8000)
+						str.erase(str.end() - 1);
+					str.erase(str.end() - 1);
+				}
+			}
+			//回车
+			else if (c == 13)
+			{
+				isSubmitSearchChineseToEnglish = true;
+				wordIndexInSearchChineseToEnglish = -1;
+				for (int i = 0; i < 3665; i++)
+				{
+					//把C语言当中的字符数组转化成c++里面的string字符串，然后再用string的find函数来查找子字符串
+					string a = "";//c++ style
+					//c++ style
+					for (int j = 0; j < strlen(word[i].Chinese); j++)
+					{
+						a += (word[i].Chinese)[j];
+					}
+					//如果找到了
+					//c++ style
+					if (a.find(str.c_str()) != string::npos)
+					{
+						wordIndexInSearchChineseToEnglish = i;
+						break;
+					}
+				}
+			}
+			//c++ style
+			else 
+			{
+				str += c;
+			}
+		}
+		//c++ style
+		else //除此之外，检测是否有IME输入，如果有，则将输入结果添加到string中
+		{
+			GetIMEString(hWnd, str);
+		}
+		//c++ style
+		if (str.length() > 100)
+			str = "";
+
 		drawChineseToEnglish();
 		FlushBatchDraw();
 	}
@@ -2571,18 +2647,68 @@ void click()
 	}
 }
 
-void fromChineseSearchEnglish(char *a)
+void GetIMEString(HWND hWnd, string& str)
 {
-	int index = -1;
-	for (int i = 0; i < 3665; i++)
+	//c++ style 整个函数
+	HIMC hIMC = ImmGetContext(hWnd);//获取HIMC
+	if (hIMC)
 	{
-		//如果找到了
-		if (strstr(a, word[i].Chinese) != NULL)
+		//这里先说明一下，以输入“中国”为例
+		//切换到中文输入法后，输入“zhongguo”，这个字符串称作IME组成字符串
+		//而在输入法列表中选择的字符串“中国”则称作IME结果字符串
+		static bool flag = false;//输入完成标记：在输入中时，IME组成字符串不为空，置true；输入完成后，IME组成字符串为空，置false
+		DWORD dwSize = ImmGetCompositionStringW(hIMC, GCS_COMPSTR, NULL, 0); //获取IME组成输入的字符串的长度
+		if (dwSize > 0)//如果IME组成字符串不为空，且没有错误（此时dwSize为负值），则置输入完成标记为true
 		{
-			index = i;
+			if (flag == false)
+			{
+				flag = true;
+			}
 		}
+		else if (dwSize == 0 && flag) //如果IME组成字符串为空，并且标记为true，则获取IME结果字符串
+		{
+			int iSize; //IME结果字符串的大小
+			LPSTR pszMultiByte = NULL;//IME结果字符串指针
+			int ChineseSimpleAcp = 936;//宽字节转换时中文的编码
+			WCHAR* lpWideStr = NULL;//宽字节字符数组
+			dwSize = ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, NULL, 0);//获取IME结果字符串的大小
+			if (dwSize > 0) //如果IME结果字符串不为空，且没有错误
+			{
+				dwSize += sizeof(WCHAR);//大小要加上NULL结束符
+				//为获取IME结果字符串分配空间
+				if (lpWideStr)
+				{
+					delete[]lpWideStr;
+					lpWideStr = NULL;
+				}
+				lpWideStr = new WCHAR[dwSize];
+				memset(lpWideStr, 0, dwSize); //清空结果空间
+				ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, lpWideStr, dwSize);//获取IME结果字符串，这里获取的是宽字节
+				iSize = WideCharToMultiByte(ChineseSimpleAcp, 0, lpWideStr, -1, NULL, 0, NULL, NULL);//计算将IME结果字符串转换为ASCII标准字节后的大小
+				//为转换分配空间
+				if (pszMultiByte)
+				{
+					delete[] pszMultiByte;
+					pszMultiByte = NULL;
+				}
+				pszMultiByte = new char[iSize + 1];
+				WideCharToMultiByte(ChineseSimpleAcp, 0, lpWideStr, -1, pszMultiByte, iSize, NULL, NULL);//宽字节转换
+				pszMultiByte[iSize] = '\0';
+				str += pszMultiByte;//添加到string中
+				//释放空间
+				if (lpWideStr)
+				{
+					delete[]lpWideStr;
+					lpWideStr = NULL;
+				}
+				if (pszMultiByte)
+				{
+					delete[] pszMultiByte;
+					pszMultiByte = NULL;
+				}
+			}
+			flag = false;
+		}
+		ImmReleaseContext(hWnd, hIMC);//释放HIMC
 	}
-
-	//如果index=-1表示未匹配到
-	//如果index>=0,表示匹配到了
 }

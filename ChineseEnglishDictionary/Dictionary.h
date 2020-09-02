@@ -9,8 +9,10 @@
 #include <ctype.h>
 #include <windows.h>
 #include <string.h>
+#include <iostream>
 #pragma comment(lib,"Imm32.lib")
 #pragma comment(lib,"Winmm.lib")
+using namespace std;
 
 //储存单词的结构体，用typedef定义别名为Word
 typedef struct
@@ -89,7 +91,9 @@ int maxIndex;//判断强化记忆单词的在排序数组当中的最大值,最�
 int isReturnSearchWords;//在查询的界面下，标记是否退出，为1则表示退出，0表示不退出
 int lengthOfSearchEnglishToChinese = 0;//英文搜索中文模式,用户输入的下一个字母储存在数组里面的下标
 int wordIndexInSearchEnglishToChinese = -1;//英文搜索中文模式,如果搜索到了，则储存的是下标，未搜索到为-1
+int wordIndexInSearchChineseToEnglish = -1;//中文搜索英文模式,如果搜索到了，则储存的是下标，未搜索到为-1
 bool isSubmitSearchEnglishToChinese = false;//英文搜索中文模式,用户是否提交过
+bool isSubmitSearchChineseToEnglish = false;//中文搜索中文模式,用户是否提交过
 CHAR A[40];//背单词背中文模式下选项A的内容
 CHAR B[40];//背单词背中文模式下选项B的内容
 CHAR C[40];//背单词背中文模式下选项C的内容
@@ -97,6 +101,7 @@ CHAR D[40];//背单词背中文模式下选项D的内容
 CHAR searchEnglishToChinese[25] = {0};//英文搜索中文模式，用户的答案
 CHAR userWord[20];//在背单词背英语的界面用户输入的单词
 time_t nowTime, beginTime;//测验计时开始和结束
+string str;
 
 IMAGE imgMenu;//init界面
 IMAGE browseWords;//browseWords界面
@@ -154,4 +159,4 @@ int comp(const void*a, const void*b);//qsort的比较函数
 void fromEnglishSearchChinese(char *a);//由给定的英文搜索中文，返回下标，没有搜索到返回-1
 void endReciteStrengthenWord();//结束强化记忆的页面
 void click();//发出一次鼠标点击音效
-void fromChineseSearchEnglish(char *a);//由给定的中文搜索英文，返回下标，没有搜索到返回-1
+void GetIMEString(HWND hWnd, string& str);
